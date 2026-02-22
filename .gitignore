@@ -1,0 +1,16 @@
+# Build artifacts
+bin/
+aura-ai-gateway
+
+# Tooling and IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Go files
+vendor/
+
+# Ignore environment files
+.env
+.env.local

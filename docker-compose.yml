@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  gateway:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS_ADDR=redis:6379
+      - UPSTREAM_URL=https://api.openai.com/v1/chat/completions
+      - PORT=8080
+    depends_on:
+      - redis
+    networks:
+      - aura-net
+
+  redis:
+    image: valkey/valkey:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - aura-net
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - aura-net
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    networks:
+      - aura-net
+
+networks:
+  aura-net:
+    driver: bridge
